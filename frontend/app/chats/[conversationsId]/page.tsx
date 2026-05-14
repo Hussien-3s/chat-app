@@ -3,20 +3,20 @@ import ChatCard from "@/components/chatCard"
 import ChatArea from "@/components/ChatArea"
 import { currentUser } from "@clerk/nextjs/server";
 import { Search } from "lucide-react"
-import axios from "axios"
+import API from "@/config/axiosConfig"
 
 async function getChats(id: string) {
-    const response = await axios.get(`http://localhost:8080/api/get-conversations/${id}`)
+    const response = await API.get(`/get-conversations/${id}`)
     return response.data
 }
 
 async function getMessages(id: string) {
-    const response = await axios.get(`http://localhost:8080/api/get-messages/${id}`)
+    const response = await API.get(`/get-messages/${id}`)
     return response.data
 }
 
 async function getUsername(id: string) {
-    const response = await axios.get(`http://localhost:8080/api/get-user-by-id/${id}`)
+    const response = await API.get(`/get-user-by-id/${id}`)
     return response.data
 }
 
