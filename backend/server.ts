@@ -29,12 +29,6 @@ app.use("/api", getRouter);
 app.use("/api", postRouter);
 app.use("/api", patchRouter);
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, 'index.html'));
-});
-
 io.on("connection", (socket) => {
     console.log("User Connected: " + socket.id);
 
