@@ -2,7 +2,7 @@ import Sidebar from "@/components/Sidebar"
 import ChatCard from "@/components/chatCard"
 import ChatArea from "@/components/ChatArea"
 import { currentUser } from "@clerk/nextjs/server";
-import axios from "axios"
+import API from "@/config/axiosConfig"
 
 interface User {
   id: string
@@ -11,12 +11,12 @@ interface User {
 
 async function getChats(userId: string | undefined) {
   if (!userId) return [];
-  const response = await axios.get(`http://localhost:8080/api/get-conversations/${userId}`)
+  const response = await API.get(`/get-conversations/${userId}`)
   return response.data
 }
 
 async function getUsername(id: string) {
-  const response = await axios.get(`http://localhost:8080/api/get-user-by-id/${id}`)
+  const response = await API.get(`/get-user-by-id/${id}`)
   return response.data
 }
 
