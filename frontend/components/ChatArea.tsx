@@ -70,8 +70,7 @@ export default function ChatArea({ allow, messages, name, online, messageRequest
             message: messageInput
         })
 
-        const updatedConversation = await axios.patch(`http://localhost:8080/api/update-last-message/${messageRequest}`)
-        console.log(updatedConversation.data)
+        await axios.patch(`http://localhost:8080/api/update-last-message/${messageRequest}`)
     }
 
     return (

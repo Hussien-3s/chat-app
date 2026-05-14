@@ -29,7 +29,7 @@ export default async function Home({ params }: { params: { conversationsId: stri
     const friendReq = await getUsername(friendId)
     const friendName = friendReq?.name
     const mapChats = chats?.map((chat: any) => (
-        <ChatCard key={chat._id} name={friendName} lastMessage={chat.lastMessage.text} time={chat.createdAt} active={true} conversationId={chat._id} unread={chat.lastMessage.seen} />
+        <ChatCard key={chat._id} name={friendName} senderId={chat.lastMessage.senderId} lastMessage={chat.lastMessage.text} time={chat.createdAt} active={true} conversationId={chat._id} unread={chat.lastMessage.seen} />
     ))
 
     return (

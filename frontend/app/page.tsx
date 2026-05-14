@@ -1,9 +1,7 @@
 import Sidebar from "@/components/Sidebar"
 import ChatCard from "@/components/chatCard"
 import ChatArea from "@/components/ChatArea"
-import addConversationInput from "@/components/addConversationInput"
 import { currentUser } from "@clerk/nextjs/server";
-import { Search, Plus } from "lucide-react"
 import axios from "axios"
 
 interface User {
@@ -27,10 +25,9 @@ export default async function Home() {
   const chats = await getChats(user?.id)
   const friendId = chats[0]?.participants?.filter((participant: any) => participant !== user?.id)[0]
   const friendReq = await getUsername(friendId)
-  console.log(friendReq)
   const friendName = friendReq?.name
   const mapChats = chats.map((chat: any) => (
-    <ChatCard key={chat._id} name={friendName} lastMessage={chat.lastMessage.text} time={chat.createdAt} active={true} conversationId={chat._id} unread={chat.lastMessage.seen} />
+    <ChatCard key={chat._id} name={friendName} lastMessage={chat.lastMessage.text} senderId={chat.lastMessage.senderId} time={chat.createdAt} active={true} conversationId={chat._id} unread={chat.lastMessage.seen} />
   ))
 
   return (

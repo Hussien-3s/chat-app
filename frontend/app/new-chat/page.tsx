@@ -5,7 +5,7 @@ import axios from "axios"
 import Sidebar from "@/components/Sidebar"
 import { Users, UserPlus } from "lucide-react"
 import { useUser } from "@clerk/nextjs";
-import FreindId from "../actions/getFreindId";
+import { FreindId } from "../actions/getFreindId";
 import { useRouter } from "next/navigation";
 
 export default function NewChatPage() {

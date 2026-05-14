@@ -2,7 +2,9 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useState, useEffect } from "react"
+import { useUser } from "@clerk/nextjs";
 import { io } from "socket.io-client";
+import { FreindName } from "@/app/actions/getFreindId";
 import Link from "next/link"
 
 const socket = io("http://localhost:8080");
@@ -13,31 +15,63 @@ export default function ChatCard({
     time,
     unread = 0,
     active = false,
-    conversationId
+    conversationId,
+    senderId
 }: {
     name: string,
     lastMessage: string,
     time: string,
     unread?: number,
-    active?: boolean
-    conversationId: string
+    active?: boolean,
+    conversationId: string,
+    senderId: any
 }) {
     const [currentLastMessage, setCurrentLastMessage] = useState(lastMessage)
+    const [sender, setSender] = useState("You")
+    const { user } = useUser();
+
+    console.log("senderId :", senderId)
+    console.log("userId :", user?.id)
 
     useEffect(() => {
-        // الاستماع لحدث تحديث القائمة
-        socket.on("update_chat_list", (newData) => {
-            // ✅ نتأكد إن الرسالة دي تخص المحادثة الحالية فقط
-            if (newData.conversationId === conversationId) {
-                setCurrentLastMessage(newData.message);
+        const updateSender = async () => {
+            const friendData = await FreindName(senderId);
+            if (user?.id === senderId) {
+                setSender("You");
+            } else {
+                if (friendData) {
+                    setSender(friendData.name);
+                }
             }
+        };
+
+        updateSender();
+    }, [user?.id, senderId])
+
+
+    useEffect(() => {
+        socket.on("update_chat_list", (newData) => {
+            const updateSender = async () => {
+                if (newData.conversationId === conversationId) {
+                    setCurrentLastMessage(newData.message);
+                    if (newData.senderId === user?.id) {
+                        setSender("You")
+                    } else {
+                        const friendData = await FreindName(newData.sender);
+                        if (friendData) {
+                            setSender(friendData.name);
+                        }
+                    }
+                }
+            };
+
+            updateSender();
         });
 
-        // تنظيف الـ listener عند مسح المكون
         return () => {
             socket.off("update_chat_list");
         };
-    }, [conversationId]); // الـ dependency هنا مهمة
+    }, [conversationId]);
 
     return (
         <Link href={`/chats/${conversationId}`}>
@@ -62,7 +96,7 @@ export default function ChatCard({
                     </div>
                     <div className="flex justify-between items-center">
                         <p className="text-xs text-gray-400 truncate pr-2">
-                            {currentLastMessage}
+                            {sender}: {currentLastMessage}
                         </p>
                         {unread > 0 && (
                             <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-blue-600 text-white text-[10px] font-bold rounded-full">
