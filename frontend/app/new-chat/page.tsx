@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import axios from "axios"
+import API from "@/config/axiosConfig"
 import Sidebar from "@/components/Sidebar"
 import { Users, UserPlus } from "lucide-react"
 import { useUser } from "@clerk/nextjs";
@@ -28,7 +28,7 @@ export default function NewChatPage() {
             }, 3000)
             return
         }
-        const res = await axios.post("http://localhost:8080/api/create-conversation", {
+        const res = await API.post("/create-conversation", {
             user1: user?.id,
             user2: id.clerkId
         })
